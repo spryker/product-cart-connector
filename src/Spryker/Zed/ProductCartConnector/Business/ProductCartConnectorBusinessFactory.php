@@ -13,10 +13,10 @@ use Spryker\Zed\ProductCartConnector\Business\Manager\ProductManagerInterface;
 use Spryker\Zed\ProductCartConnector\ProductCartConnectorConfig;
 
 /**
- * @method ProductCartConnectorDependencyContainer getBusinessFactory()
+ * @method ProductCartConnectorBusinessFactory getBusinessFactory()
  * @method ProductCartConnectorConfig getConfig()
  */
-class ProductCartConnectorDependencyContainer extends AbstractBusinessFactory
+class ProductCartConnectorBusinessFactory extends AbstractBusinessFactory
 {
 
     /**
