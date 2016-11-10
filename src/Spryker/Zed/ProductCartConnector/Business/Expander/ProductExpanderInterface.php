@@ -5,18 +5,18 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\ProductCartConnector\Business\Manager;
+namespace Spryker\Zed\ProductCartConnector\Business\Expander;
 
 use Generated\Shared\Transfer\CartChangeTransfer;
 
-interface ProductManagerInterface
+interface ProductExpanderInterface
 {
 
     /**
-     * @param \Generated\Shared\Transfer\CartChangeTransfer $change
+     * @param \Generated\Shared\Transfer\CartChangeTransfer $cartChangeTransfer
      *
      * @return \Generated\Shared\Transfer\CartChangeTransfer
      */
-    public function expandItems(CartChangeTransfer $change);
+    public function expandItems(CartChangeTransfer $cartChangeTransfer);
 
 }
