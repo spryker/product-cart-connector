@@ -7,15 +7,11 @@
 
 namespace Spryker\Zed\ProductCartConnector\Business\Validator;
 
-use ArrayObject;
 use Generated\Shared\Transfer\CartChangeTransfer;
 use Generated\Shared\Transfer\CartPreCheckResponseTransfer;
-use Generated\Shared\Transfer\CheckoutErrorTransfer;
-use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\MessageTransfer;
 use Generated\Shared\Transfer\ProductConcreteTransfer;
-use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToProductInterface;
 
 class ProductValidator implements ProductValidatorInterface
@@ -72,12 +68,11 @@ class ProductValidator implements ProductValidatorInterface
     {
         $responseTransfer = new CartPreCheckResponseTransfer();
 
-        $itemTransfers = $cartChangeTransfer->getItems();
-        $skus = $this->extractProductSkusFromItemTransfers($itemTransfers);
+        $skus = $this->getProductSkusFromCartChangeTransfer($cartChangeTransfer);
         $indexedProductConcreteTransfers = $this->getIndexedProductConcretesByProductConcreteSkus($skus[static::SKU_CONCRETE]);
         $indexedProductAbstractTransfers = $this->getIndexedProductAbstractsByProductAbstractSkus($skus[static::SKU_ABSTRACT]);
 
-        foreach ($itemTransfers as $itemTransfer) {
+        foreach ($cartChangeTransfer->getItems() as $itemTransfer) {
             if ($itemTransfer->getSku()) {
                 if ($this->validateConcreteItem($itemTransfer, $responseTransfer, $indexedProductConcreteTransfers) === false) {
                     continue;
@@ -91,49 +86,6 @@ class ProductValidator implements ProductValidatorInterface
         }
 
         return $this->setResponseSuccessful($responseTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     *
-     * @return bool
-     */
-    public function validateCheckoutQuoteItems(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponseTransfer): bool
-    {
-        if ($quoteTransfer->getItems()->count() === 0) {
-            $checkoutResponseTransfer->setIsSuccess(true);
-
-            return true;
-        }
-
-        $itemTransfers = $quoteTransfer->getItems();
-        $skus = $this->extractProductSkusFromItemTransfers($itemTransfers);
-        $indexedProductConcreteTransfers = $this->getIndexedProductConcretesByProductConcreteSkus($skus[static::SKU_CONCRETE]);
-        $indexedProductAbstractTransfers = $this->getIndexedProductAbstractsByProductAbstractSkus($skus[static::SKU_ABSTRACT]);
-
-        foreach ($itemTransfers as $itemTransfer) {
-            if ($itemTransfer->getSku()) {
-                $checkoutResponseTransfer = $this->validateProductConcreteTransfersForCheckout(
-                    $checkoutResponseTransfer,
-                    $indexedProductConcreteTransfers,
-                    $itemTransfer->getSkuOrFail(),
-                );
-
-                continue;
-            }
-
-            $checkoutResponseTransfer = $this->validateProductAbstractTransfersForCheckout(
-                $checkoutResponseTransfer,
-                $indexedProductAbstractTransfers,
-                $itemTransfer->getAbstractSkuOrFail(),
-            );
-        }
-
-        $isSuccessful = $checkoutResponseTransfer->getErrors()->count() === 0;
-        $checkoutResponseTransfer->setIsSuccess($isSuccessful);
-
-        return $isSuccessful;
     }
 
     /**
@@ -214,60 +166,6 @@ class ProductValidator implements ProductValidatorInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     * @param array<string, \Generated\Shared\Transfer\ProductConcreteTransfer> $indexedProductConcreteTransfers
-     * @param string $sku
-     *
-     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
-     */
-    protected function validateProductConcreteTransfersForCheckout(
-        CheckoutResponseTransfer $checkoutResponseTransfer,
-        array $indexedProductConcreteTransfers,
-        string $sku
-    ): CheckoutResponseTransfer {
-        if (!isset($indexedProductConcreteTransfers[$sku])) {
-            $checkoutErrorTransfer = $this->createCheckoutErrorTransfer(static::MESSAGE_ERROR_CONCRETE_PRODUCT_EXISTS, [
-                static::MESSAGE_PARAM_SKU => $sku,
-            ]);
-
-            return $checkoutResponseTransfer->addError($checkoutErrorTransfer);
-        }
-
-        if ($indexedProductConcreteTransfers[$sku]->getIsActiveOrFail()) {
-            return $checkoutResponseTransfer;
-        }
-
-        $checkoutErrorTransfer = $this->createCheckoutErrorTransfer(static::MESSAGE_ERROR_CONCRETE_PRODUCT_INACTIVE, [
-            static::MESSAGE_PARAM_SKU => $sku,
-        ]);
-
-        return $checkoutResponseTransfer->addError($checkoutErrorTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     * @param array<\Generated\Shared\Transfer\ProductAbstractTransfer> $indexedProductAbstractTransfers
-     * @param string $sku
-     *
-     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
-     */
-    protected function validateProductAbstractTransfersForCheckout(
-        CheckoutResponseTransfer $checkoutResponseTransfer,
-        array $indexedProductAbstractTransfers,
-        string $sku
-    ): CheckoutResponseTransfer {
-        if (isset($indexedProductAbstractTransfers[$sku])) {
-            return $checkoutResponseTransfer;
-        }
-
-        $checkoutErrorTransfer = $this->createCheckoutErrorTransfer(static::MESSAGE_ERROR_ABSTRACT_PRODUCT_EXISTS, [
-            static::MESSAGE_PARAM_SKU => $sku,
-        ]);
-
-        return $checkoutResponseTransfer->addError($checkoutErrorTransfer);
-    }
-
-    /**
      * @param string $sku
      *
      * @return \Generated\Shared\Transfer\MessageTransfer
@@ -308,17 +206,17 @@ class ProductValidator implements ProductValidatorInterface
     }
 
     /**
-     * @param \ArrayObject<array-key, \Generated\Shared\Transfer\ItemTransfer> $itemTransfers
+     * @param \Generated\Shared\Transfer\CartChangeTransfer $cartChangeTransfer
      *
-     * @return array<string, array<string>>
+     * @return array<array<string>>
      */
-    protected function extractProductSkusFromItemTransfers(ArrayObject $itemTransfers): array
+    protected function getProductSkusFromCartChangeTransfer(CartChangeTransfer $cartChangeTransfer): array
     {
         $skus = [
             static::SKU_CONCRETE => [],
             static::SKU_ABSTRACT => [],
         ];
-        foreach ($itemTransfers as $itemTransfer) {
+        foreach ($cartChangeTransfer->getItems() as $itemTransfer) {
             if ($itemTransfer->getSku()) {
                 $skus[static::SKU_CONCRETE][] = $itemTransfer->getSku();
 
@@ -371,18 +269,5 @@ class ProductValidator implements ProductValidatorInterface
         }
 
         return $indexedProductAbstractTransfers;
-    }
-
-    /**
-     * @param string $message
-     * @param array<string, mixed> $parameters
-     *
-     * @return \Generated\Shared\Transfer\CheckoutErrorTransfer
-     */
-    protected function createCheckoutErrorTransfer(string $message, array $parameters = []): CheckoutErrorTransfer
-    {
-        return (new CheckoutErrorTransfer())
-            ->setMessage($message)
-            ->setParameters($parameters);
     }
 }

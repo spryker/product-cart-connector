@@ -29,7 +29,7 @@ class ProductCartConnectorToMessengerFacadeBridge implements ProductCartConnecto
      *
      * @return void
      */
-    public function addInfoMessage(MessageTransfer $message): void
+    public function addInfoMessage(MessageTransfer $message)
     {
         $this->messengerFacade->addInfoMessage($message);
     }

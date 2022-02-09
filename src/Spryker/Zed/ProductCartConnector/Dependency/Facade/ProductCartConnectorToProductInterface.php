@@ -19,7 +19,7 @@ interface ProductCartConnectorToProductInterface
      *
      * @return \Generated\Shared\Transfer\ProductConcreteTransfer
      */
-    public function getProductConcrete($concreteSku): ProductConcreteTransfer;
+    public function getProductConcrete($concreteSku);
 
     /**
      * @deprecated Use {@link \Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToProductInterface::getRawProductConcreteTransfersByConcreteSkus()} instead.
@@ -36,21 +36,21 @@ interface ProductCartConnectorToProductInterface
      *
      * @return string
      */
-    public function getLocalizedProductConcreteName(ProductConcreteTransfer $productConcreteTransfer, LocaleTransfer $localeTransfer): string;
+    public function getLocalizedProductConcreteName(ProductConcreteTransfer $productConcreteTransfer, LocaleTransfer $localeTransfer);
 
     /**
      * @param string $sku
      *
      * @return bool
      */
-    public function hasProductConcrete($sku): bool;
+    public function hasProductConcrete($sku);
 
     /**
      * @param string $sku
      *
      * @return bool
      */
-    public function hasProductAbstract($sku): bool;
+    public function hasProductAbstract($sku);
 
     /**
      * @param \Generated\Shared\Transfer\ProductConcreteTransfer $productConcreteTransfer

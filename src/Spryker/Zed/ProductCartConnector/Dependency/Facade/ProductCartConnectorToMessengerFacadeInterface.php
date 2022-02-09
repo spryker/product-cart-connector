@@ -16,5 +16,5 @@ interface ProductCartConnectorToMessengerFacadeInterface
      *
      * @return void
      */
-    public function addInfoMessage(MessageTransfer $message): void;
+    public function addInfoMessage(MessageTransfer $message);
 }

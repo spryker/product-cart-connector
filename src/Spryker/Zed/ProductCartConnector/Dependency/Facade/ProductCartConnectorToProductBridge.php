@@ -32,7 +32,7 @@ class ProductCartConnectorToProductBridge implements ProductCartConnectorToProdu
      *
      * @return \Generated\Shared\Transfer\ProductConcreteTransfer
      */
-    public function getProductConcrete($concreteSku): ProductConcreteTransfer
+    public function getProductConcrete($concreteSku)
     {
         return $this->productFacade->getProductConcrete($concreteSku);
     }
@@ -55,7 +55,7 @@ class ProductCartConnectorToProductBridge implements ProductCartConnectorToProdu
      *
      * @return string
      */
-    public function getLocalizedProductConcreteName(ProductConcreteTransfer $productConcreteTransfer, LocaleTransfer $localeTransfer): string
+    public function getLocalizedProductConcreteName(ProductConcreteTransfer $productConcreteTransfer, LocaleTransfer $localeTransfer)
     {
         return $this->productFacade->getLocalizedProductConcreteName($productConcreteTransfer, $localeTransfer);
     }
@@ -65,7 +65,7 @@ class ProductCartConnectorToProductBridge implements ProductCartConnectorToProdu
      *
      * @return bool
      */
-    public function hasProductConcrete($sku): bool
+    public function hasProductConcrete($sku)
     {
         return $this->productFacade->hasProductConcrete($sku);
     }
@@ -75,7 +75,7 @@ class ProductCartConnectorToProductBridge implements ProductCartConnectorToProdu
      *
      * @return bool
      */
-    public function hasProductAbstract($sku): bool
+    public function hasProductAbstract($sku)
     {
         return $this->productFacade->hasProductAbstract($sku);
     }
