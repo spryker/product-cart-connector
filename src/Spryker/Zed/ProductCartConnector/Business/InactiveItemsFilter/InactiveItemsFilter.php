@@ -185,7 +185,7 @@ class InactiveItemsFilter implements InactiveItemsFilterInterface
 
     /**
      * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     * @param list<string> $productSkus
+     * @param array<string> $productSkus
      *
      * @return \Generated\Shared\Transfer\ProductCriteriaTransfer
      */
