@@ -138,16 +138,16 @@ class ProductManagerTest extends Unit
 
         $mockProductFacade->expects($this->once())
             ->method('getRawProductConcreteTransfersByConcreteSkus')
-            ->will($this->returnValue([$returnValue]));
+            ->willReturn([$returnValue]);
 
         $mockProductFacade->expects($this->once())
             ->method('getLocalizedProductConcreteName')
-            ->will($this->returnValue($localizedName));
+            ->willReturn($localizedName);
 
         $mockLocaleFacade = $this->getMockLocaleFacade();
         $mockLocaleFacade->expects($this->once())
             ->method('getCurrentLocale')
-            ->will($this->returnValue(new LocaleTransfer()));
+            ->willReturn(new LocaleTransfer());
 
         return new ProductExpander($mockLocaleFacade, $mockProductFacade);
     }
