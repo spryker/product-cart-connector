@@ -25,10 +25,6 @@ class ProductExpander implements ProductExpanderInterface
      */
     protected $productFacade;
 
-    /**
-     * @param \Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToLocaleInterface $localeFacade
-     * @param \Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToProductInterface $productFacade
-     */
     public function __construct(
         ProductCartConnectorToLocaleInterface $localeFacade,
         ProductCartConnectorToProductInterface $productFacade

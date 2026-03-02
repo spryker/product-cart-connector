@@ -44,11 +44,6 @@ class InactiveItemsFilter implements InactiveItemsFilterInterface
      */
     protected $messengerFacade;
 
-    /**
-     * @param \Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToProductInterface $productFacade
-     * @param \Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToStoreFacadeInterface $storeFacade
-     * @param \Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToMessengerFacadeInterface $messengerFacade
-     */
     public function __construct(
         ProductCartConnectorToProductInterface $productFacade,
         ProductCartConnectorToStoreFacadeInterface $storeFacade,
@@ -76,11 +71,6 @@ class InactiveItemsFilter implements InactiveItemsFilterInterface
         return $quoteTransfer->setItems($filteredItemTransfers);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\CartChangeTransfer $cartChangeTransfer
-     *
-     * @return \Generated\Shared\Transfer\CartChangeTransfer
-     */
     public function filterOutInactiveCartChangeItems(CartChangeTransfer $cartChangeTransfer): CartChangeTransfer
     {
         $filteredItemTransfers = $this->filterOutInactiveItems(

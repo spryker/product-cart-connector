@@ -56,9 +56,6 @@ class ProductValidator implements ProductValidatorInterface
      */
     protected $productFacade;
 
-    /**
-     * @param \Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToProductInterface $productFacade
-     */
     public function __construct(ProductCartConnectorToProductInterface $productFacade)
     {
         $this->productFacade = $productFacade;
@@ -176,12 +173,6 @@ class ProductValidator implements ProductValidatorInterface
         return false;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcreteTransfer $productConcreteTransfer
-     * @param \Generated\Shared\Transfer\CartPreCheckResponseTransfer $responseTransfer
-     *
-     * @return void
-     */
     protected function productStatusCheck(ProductConcreteTransfer $productConcreteTransfer, CartPreCheckResponseTransfer $responseTransfer): void
     {
         if ($productConcreteTransfer->getIsActive()) {
@@ -191,11 +182,6 @@ class ProductValidator implements ProductValidatorInterface
         $responseTransfer->addMessage($this->createItemInactiveErrorMessage($productConcreteTransfer->getSku()));
     }
 
-    /**
-     * @param string $concreteSku
-     *
-     * @return bool
-     */
     protected function isProductConcreteActive(string $concreteSku): bool
     {
         return $this->productFacade->isProductConcreteActive(
@@ -281,11 +267,6 @@ class ProductValidator implements ProductValidatorInterface
         return $checkoutResponseTransfer->addError($checkoutErrorTransfer);
     }
 
-    /**
-     * @param string $sku
-     *
-     * @return \Generated\Shared\Transfer\MessageTransfer
-     */
     protected function createItemInactiveErrorMessage(string $sku): MessageTransfer
     {
         return (new MessageTransfer())

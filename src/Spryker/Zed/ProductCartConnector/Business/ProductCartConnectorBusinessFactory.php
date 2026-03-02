@@ -47,9 +47,6 @@ class ProductCartConnectorBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\ProductCartConnector\Business\InactiveItemsFilter\InactiveItemsFilterInterface
-     */
     public function createInactiveItemsFilter(): InactiveItemsFilterInterface
     {
         return new InactiveItemsFilter(
@@ -59,9 +56,6 @@ class ProductCartConnectorBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\ProductCartConnector\Business\Extractor\QuoteOriginalSalesOrderItemExtractorInterface
-     */
     public function createQuoteOriginalSalesOrderItemExtractor(): QuoteOriginalSalesOrderItemExtractorInterface
     {
         return new QuoteOriginalSalesOrderItemExtractor();
@@ -83,25 +77,16 @@ class ProductCartConnectorBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(ProductCartConnectorDependencyProvider::FACADE_PRODUCT);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToMessengerFacadeInterface
-     */
     public function getMessengerFacade(): ProductCartConnectorToMessengerFacadeInterface
     {
         return $this->getProvidedDependency(ProductCartConnectorDependencyProvider::FACADE_MESSENGER);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToStoreFacadeInterface
-     */
     public function getStoreFacade(): ProductCartConnectorToStoreFacadeInterface
     {
         return $this->getProvidedDependency(ProductCartConnectorDependencyProvider::FACADE_STORE);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductCartConnector\Business\Expander\ProductUrlExpanderInterface
-     */
     public function createProductUrlExpander(): ProductUrlExpanderInterface
     {
         return new ProductUrlExpander(

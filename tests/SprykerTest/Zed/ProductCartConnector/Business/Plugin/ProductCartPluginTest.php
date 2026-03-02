@@ -71,9 +71,6 @@ class ProductCartPluginTest extends Unit
      */
     protected $localeFacade;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         parent::setUp();
@@ -82,9 +79,6 @@ class ProductCartPluginTest extends Unit
         $this->productCartConnectorFacade = new ProductCartConnectorFacade();
     }
 
-    /**
-     * @return void
-     */
     public function testPluginExpandsCartItemWithExpectedProductData(): void
     {
         $localeName = $this->localeFacade->getCurrentLocale()->getLocaleNameOrFail();

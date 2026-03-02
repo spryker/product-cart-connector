@@ -30,12 +30,6 @@ interface ProductCartConnectorToProductInterface
      */
     public function getRawProductConcreteBySku(string $productConcreteSku): ProductConcreteTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcreteTransfer $productConcreteTransfer
-     * @param \Generated\Shared\Transfer\LocaleTransfer $localeTransfer
-     *
-     * @return string
-     */
     public function getLocalizedProductConcreteName(ProductConcreteTransfer $productConcreteTransfer, LocaleTransfer $localeTransfer): string;
 
     /**
@@ -52,11 +46,6 @@ interface ProductCartConnectorToProductInterface
      */
     public function hasProductAbstract($sku): bool;
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcreteTransfer $productConcreteTransfer
-     *
-     * @return bool
-     */
     public function isProductConcreteActive(ProductConcreteTransfer $productConcreteTransfer): bool;
 
     /**

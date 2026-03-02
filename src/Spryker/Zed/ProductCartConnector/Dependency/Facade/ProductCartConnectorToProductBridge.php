@@ -49,12 +49,6 @@ class ProductCartConnectorToProductBridge implements ProductCartConnectorToProdu
         return $this->productFacade->getRawProductConcreteBySku($productConcreteSku);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcreteTransfer $productConcreteTransfer
-     * @param \Generated\Shared\Transfer\LocaleTransfer $localeTransfer
-     *
-     * @return string
-     */
     public function getLocalizedProductConcreteName(ProductConcreteTransfer $productConcreteTransfer, LocaleTransfer $localeTransfer): string
     {
         return $this->productFacade->getLocalizedProductConcreteName($productConcreteTransfer, $localeTransfer);
@@ -80,11 +74,6 @@ class ProductCartConnectorToProductBridge implements ProductCartConnectorToProdu
         return $this->productFacade->hasProductAbstract($sku);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcreteTransfer $productConcreteTransfer
-     *
-     * @return bool
-     */
     public function isProductConcreteActive(ProductConcreteTransfer $productConcreteTransfer): bool
     {
         return $this->productFacade->isProductConcreteActive($productConcreteTransfer);

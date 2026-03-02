@@ -24,10 +24,6 @@ class ProductUrlExpander implements ProductUrlExpanderInterface
      */
     protected $productFacade;
 
-    /**
-     * @param \Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToLocaleInterface $localeFacade
-     * @param \Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToProductInterface $productFacade
-     */
     public function __construct(
         ProductCartConnectorToLocaleInterface $localeFacade,
         ProductCartConnectorToProductInterface $productFacade
@@ -36,11 +32,6 @@ class ProductUrlExpander implements ProductUrlExpanderInterface
         $this->productFacade = $productFacade;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\CartChangeTransfer $cartChangeTransfer
-     *
-     * @return \Generated\Shared\Transfer\CartChangeTransfer
-     */
     public function expandItemTransfersWithUrls(CartChangeTransfer $cartChangeTransfer): CartChangeTransfer
     {
         $productAbstractIds = $this->getProductAbstractIds($cartChangeTransfer);

@@ -20,10 +20,5 @@ interface InactiveItemsFilterInterface
      */
     public function filterInactiveItems(QuoteTransfer $quoteTransfer, array $skusToSkip = []): QuoteTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\CartChangeTransfer $cartChangeTransfer
-     *
-     * @return \Generated\Shared\Transfer\CartChangeTransfer
-     */
     public function filterOutInactiveCartChangeItems(CartChangeTransfer $cartChangeTransfer): CartChangeTransfer;
 }

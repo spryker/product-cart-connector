@@ -54,9 +54,6 @@ class ProductManagerTest extends Unit
      */
     public const PRODUCT_NAME = 'product name';
 
-    /**
-     * @return void
-     */
     public function testExpandItemsMustAddProductIdToAllCartItems(): void
     {
         $changeTransfer = $this->getChangeTransfer();
@@ -73,9 +70,6 @@ class ProductManagerTest extends Unit
         $this->assertSame($productConcreteTransfer->getIdProductConcrete(), $changedItemTransfer->getId());
     }
 
-    /**
-     * @return void
-     */
     public function testExpandItemsMustAddAbstractSkuToAllCartItems(): void
     {
         $changeTransfer = $this->getChangeTransfer();
@@ -93,9 +87,6 @@ class ProductManagerTest extends Unit
         $this->assertSame($productConcreteTransfer->getAbstractSku(), $changedItemTransfer->getAbstractSku());
     }
 
-    /**
-     * @return void
-     */
     public function testExpandItemsMustAddAbstractIdToAllCartItems(): void
     {
         $changeTransfer = $this->getChangeTransfer();
@@ -113,9 +104,6 @@ class ProductManagerTest extends Unit
         $this->assertSame($productConcreteTransfer->getFkProductAbstract(), $changedItemTransfer->getIdProductAbstract());
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\CartChangeTransfer
-     */
     private function getChangeTransfer(): CartChangeTransfer
     {
         $changeTransfer = new CartChangeTransfer();
@@ -126,12 +114,6 @@ class ProductManagerTest extends Unit
         return $changeTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcreteTransfer $returnValue
-     * @param string $localizedName
-     *
-     * @return \Spryker\Zed\ProductCartConnector\Business\Expander\ProductExpander
-     */
     public function getProductManager(ProductConcreteTransfer $returnValue, string $localizedName): ProductExpander
     {
         $mockProductFacade = $this->getMockProductFacade();

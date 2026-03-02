@@ -34,9 +34,6 @@ class OrderAmendmentProductExistsCartPreCheckPluginTest extends Unit
      */
     protected ProductCartConnectorCommunicationTester $tester;
 
-    /**
-     * @return void
-     */
     public function testCheckShouldReturnSuccessResponseForActiveProduct(): void
     {
         // Arrange
@@ -59,9 +56,6 @@ class OrderAmendmentProductExistsCartPreCheckPluginTest extends Unit
         $this->assertTrue($cartPreCheckResponseTransfer->getIsSuccess());
     }
 
-    /**
-     * @return void
-     */
     public function testCheckShouldReturnFailedResponseForInactiveProduct(): void
     {
         // Arrange
@@ -84,9 +78,6 @@ class OrderAmendmentProductExistsCartPreCheckPluginTest extends Unit
         $this->assertFalse($cartPreCheckResponseTransfer->getIsSuccess());
     }
 
-    /**
-     * @return void
-     */
     public function testCheckShouldReturnSuccessResponseForInactiveProductAndItemsFromOriginalOrder(): void
     {
         // Arrange

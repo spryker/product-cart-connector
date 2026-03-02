@@ -34,9 +34,6 @@ class FilterOutInactiveCartChangeItemsTest extends Unit
      */
     protected ProductCartConnectorBusinessTester $tester;
 
-    /**
-     * @return void
-     */
     public function testRemovesInactiveItems(): void
     {
         // Arrange
@@ -62,9 +59,6 @@ class FilterOutInactiveCartChangeItemsTest extends Unit
         $this->assertSame($activeProductConcreteTransfer->getSku(), $itemTransfer->getSku());
     }
 
-    /**
-     * @return void
-     */
     public function testThrowsNullValueExceptionWhenQuoteIsNotSet(): void
     {
         // Arrange
@@ -80,9 +74,6 @@ class FilterOutInactiveCartChangeItemsTest extends Unit
         $this->tester->getFacade()->filterOutInactiveCartChangeItems($cartChangeTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testThrowsNullValueExceptionWhenStoreIsNotSet(): void
     {
         // Arrange

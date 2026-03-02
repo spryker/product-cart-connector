@@ -34,9 +34,6 @@ class OrderAmendmentRemoveInactiveItemsPreReloadPluginTest extends Unit
      */
     protected ProductCartConnectorCommunicationTester $tester;
 
-    /**
-     * @return void
-     */
     public function testPreReloadItemsShouldFilterInactiveItems(): void
     {
         // Arrange
@@ -67,9 +64,6 @@ class OrderAmendmentRemoveInactiveItemsPreReloadPluginTest extends Unit
         $this->assertSame($productConcreteTransfer3->getSku(), $itemTransfer->getSku());
     }
 
-    /**
-     * @return void
-     */
     public function testPreReloadItemsShouldNotFilterInactiveItemsFromOriginalOrder(): void
     {
         // Arrange

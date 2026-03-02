@@ -64,9 +64,6 @@ class OrderAmendmentProductExistsCheckoutPreConditionPluginTest extends Unit
      */
     protected ProductCartConnectorCommunicationTester $tester;
 
-    /**
-     * @return void
-     */
     public function testCheckConditionShouldReturnErrorIfProductConcreteDoesNotExist(): void
     {
         // Arrange
@@ -88,9 +85,6 @@ class OrderAmendmentProductExistsCheckoutPreConditionPluginTest extends Unit
         $this->assertSame([static::MESSAGE_PARAM_SKU => $itemConcreteSku], $checkoutResponseTransfer->getErrors()->offsetGet(0)->getParameters());
     }
 
-    /**
-     * @return void
-     */
     public function testCheckConditionShouldReturnErrorIfProductConcreteIsInactive(): void
     {
         // Arrange
@@ -114,9 +108,6 @@ class OrderAmendmentProductExistsCheckoutPreConditionPluginTest extends Unit
         $this->assertSame([static::MESSAGE_PARAM_SKU => $productConcreteTransfer->getSku()], $checkoutResponseTransfer->getErrors()->offsetGet(0)->getParameters());
     }
 
-    /**
-     * @return void
-     */
     public function testCheckConditionShouldReturnErrorIfProductAbstractDoesNotExist(): void
     {
         // Arrange
@@ -140,9 +131,6 @@ class OrderAmendmentProductExistsCheckoutPreConditionPluginTest extends Unit
         $this->assertSame([static::MESSAGE_PARAM_SKU => $itemAbstractSku], $checkoutResponseTransfer->getErrors()->offsetGet(0)->getParameters());
     }
 
-    /**
-     * @return void
-     */
     public function testCheckConditionShouldNotReturnErrorIfQuoteDoesNotHaveItems(): void
     {
         // Arrange
@@ -159,9 +147,6 @@ class OrderAmendmentProductExistsCheckoutPreConditionPluginTest extends Unit
         $this->assertCount(0, $checkoutResponseTransfer->getErrors());
     }
 
-    /**
-     * @return void
-     */
     public function testCheckConditionShouldNotReturnErrorIfProductConcreteIsValid(): void
     {
         // Arrange
@@ -183,9 +168,6 @@ class OrderAmendmentProductExistsCheckoutPreConditionPluginTest extends Unit
         $this->assertCount(0, $checkoutResponseTransfer->getErrors());
     }
 
-    /**
-     * @return void
-     */
     public function testCheckConditionShouldNotReturnErrorIfProductAbstractIsValid(): void
     {
         // Arrange
@@ -208,9 +190,6 @@ class OrderAmendmentProductExistsCheckoutPreConditionPluginTest extends Unit
         $this->assertCount(0, $checkoutResponseTransfer->getErrors());
     }
 
-    /**
-     * @return void
-     */
     public function testCheckConditionShouldThrowExceptionIfItemSkuAndAbstractSkuAreNotProvided(): void
     {
         // Arrange
@@ -231,9 +210,6 @@ class OrderAmendmentProductExistsCheckoutPreConditionPluginTest extends Unit
             ->checkCondition($quoteTransfer, $checkoutResponseTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testCheckConditionShouldReturnSuccessIfProductConcreteIsInactiveAndItemsFromOriginalOrder(): void
     {
         // Arrange

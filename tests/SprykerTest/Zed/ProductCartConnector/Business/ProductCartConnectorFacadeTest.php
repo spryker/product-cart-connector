@@ -68,9 +68,6 @@ class ProductCartConnectorFacadeTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testExpandItemTransfersWithUrlsForCartWithItem(): void
     {
         // Arrange
@@ -98,9 +95,6 @@ class ProductCartConnectorFacadeTest extends Unit
         $this->assertSame($productUrl->getUrl(), $cartChangeTransfer->getItems()->offsetGet(0)->getUrl());
     }
 
-    /**
-     * @return void
-     */
     public function testExpandItemTransfersWithUrlsForEmptyCart(): void
     {
         // Arrange
@@ -113,9 +107,6 @@ class ProductCartConnectorFacadeTest extends Unit
         $this->assertCount(0, $cartChangeTransfer->getItems());
     }
 
-    /**
-     * @return void
-     */
     public function testValidateCheckoutQuoteItemsWillReturnErrorIfProductConcreteDoesNotExist(): void
     {
         // Arrange
@@ -136,9 +127,6 @@ class ProductCartConnectorFacadeTest extends Unit
         $this->assertSame([static::MESSAGE_PARAM_SKU => $itemConcreteSku], $checkoutResponseTransfer->getErrors()->offsetGet(0)->getParameters());
     }
 
-    /**
-     * @return void
-     */
     public function testValidateCheckoutQuoteItemsWillReturnErrorIfProductConcreteIsInactive(): void
     {
         // Arrange
@@ -161,9 +149,6 @@ class ProductCartConnectorFacadeTest extends Unit
         $this->assertSame([static::MESSAGE_PARAM_SKU => $productConcreteTransfer->getSku()], $checkoutResponseTransfer->getErrors()->offsetGet(0)->getParameters());
     }
 
-    /**
-     * @return void
-     */
     public function testValidateCheckoutQuoteItemsWillReturnErrorIfProductAbstractDoesNotExist(): void
     {
         // Arrange
@@ -186,9 +171,6 @@ class ProductCartConnectorFacadeTest extends Unit
         $this->assertSame([static::MESSAGE_PARAM_SKU => $itemAbstractSku], $checkoutResponseTransfer->getErrors()->offsetGet(0)->getParameters());
     }
 
-    /**
-     * @return void
-     */
     public function testValidateCheckoutQuoteItemsWillNotReturnErrorIfQuoteDoesNotHaveItems(): void
     {
         // Arrange
@@ -204,9 +186,6 @@ class ProductCartConnectorFacadeTest extends Unit
         $this->assertCount(0, $checkoutResponseTransfer->getErrors());
     }
 
-    /**
-     * @return void
-     */
     public function testValidateCheckoutQuoteItemsWillNotReturnErrorIfProductConcreteIsValid(): void
     {
         // Arrange
@@ -227,9 +206,6 @@ class ProductCartConnectorFacadeTest extends Unit
         $this->assertCount(0, $checkoutResponseTransfer->getErrors());
     }
 
-    /**
-     * @return void
-     */
     public function testValidateCheckoutQuoteItemsWillNotReturnErrorIfProductAbstractIsValid(): void
     {
         // Arrange
@@ -251,9 +227,6 @@ class ProductCartConnectorFacadeTest extends Unit
         $this->assertCount(0, $checkoutResponseTransfer->getErrors());
     }
 
-    /**
-     * @return void
-     */
     public function testValidateCheckoutQuoteItemsWillThrowExceptionIfItemSkuAndAbstractSkuAreNotProvided(): void
     {
         // Arrange
@@ -273,9 +246,6 @@ class ProductCartConnectorFacadeTest extends Unit
         $this->tester->getFacade()->validateCheckoutQuoteItems($quoteTransfer, $checkoutResponseTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testFilterInactiveItemsRemovesAllDeactivatedItemsFromQuote(): void
     {
         // Arrange
