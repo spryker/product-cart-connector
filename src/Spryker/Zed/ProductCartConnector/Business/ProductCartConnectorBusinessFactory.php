@@ -44,6 +44,7 @@ class ProductCartConnectorBusinessFactory extends AbstractBusinessFactory
     {
         return new ProductValidator(
             $this->getProductFacade(),
+            $this->getConfig(),
         );
     }
 

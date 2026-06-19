@@ -18,6 +18,7 @@ use Generated\Shared\Transfer\ProductConcreteTransfer;
 use Generated\Shared\Transfer\ProductCriteriaTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToProductInterface;
+use Spryker\Zed\ProductCartConnector\ProductCartConnectorConfig;
 
 class ProductValidator implements ProductValidatorInterface
 {
@@ -56,9 +57,14 @@ class ProductValidator implements ProductValidatorInterface
      */
     protected $productFacade;
 
-    public function __construct(ProductCartConnectorToProductInterface $productFacade)
-    {
+    protected ProductCartConnectorConfig $productCartConnectorConfig;
+
+    public function __construct(
+        ProductCartConnectorToProductInterface $productFacade,
+        ProductCartConnectorConfig $productCartConnectorConfig
+    ) {
         $this->productFacade = $productFacade;
+        $this->productCartConnectorConfig = $productCartConnectorConfig;
     }
 
     /**
@@ -129,6 +135,7 @@ class ProductValidator implements ProductValidatorInterface
                     $checkoutResponseTransfer,
                     $indexedProductConcreteTransfers,
                     $itemTransfer->getSkuOrFail(),
+                    $itemTransfer->getGroupKey(),
                 );
 
                 continue;
@@ -138,6 +145,7 @@ class ProductValidator implements ProductValidatorInterface
                 $checkoutResponseTransfer,
                 $indexedProductAbstractTransfers,
                 $itemTransfer->getAbstractSkuOrFail(),
+                $itemTransfer->getGroupKey(),
             );
         }
 
@@ -223,12 +231,13 @@ class ProductValidator implements ProductValidatorInterface
     protected function validateProductConcreteTransfersForCheckout(
         CheckoutResponseTransfer $checkoutResponseTransfer,
         array $indexedProductConcreteTransfers,
-        string $sku
+        string $sku,
+        ?string $groupKey = null
     ): CheckoutResponseTransfer {
         if (!isset($indexedProductConcreteTransfers[$sku])) {
             $checkoutErrorTransfer = $this->createCheckoutErrorTransfer(static::MESSAGE_ERROR_CONCRETE_PRODUCT_EXISTS, [
                 static::MESSAGE_PARAM_SKU => $sku,
-            ]);
+            ], $groupKey);
 
             return $checkoutResponseTransfer->addError($checkoutErrorTransfer);
         }
@@ -239,7 +248,7 @@ class ProductValidator implements ProductValidatorInterface
 
         $checkoutErrorTransfer = $this->createCheckoutErrorTransfer(static::MESSAGE_ERROR_CONCRETE_PRODUCT_INACTIVE, [
             static::MESSAGE_PARAM_SKU => $sku,
-        ]);
+        ], $groupKey);
 
         return $checkoutResponseTransfer->addError($checkoutErrorTransfer);
     }
@@ -254,7 +263,8 @@ class ProductValidator implements ProductValidatorInterface
     protected function validateProductAbstractTransfersForCheckout(
         CheckoutResponseTransfer $checkoutResponseTransfer,
         array $indexedProductAbstractTransfers,
-        string $sku
+        string $sku,
+        ?string $groupKey = null
     ): CheckoutResponseTransfer {
         if (isset($indexedProductAbstractTransfers[$sku])) {
             return $checkoutResponseTransfer;
@@ -262,7 +272,7 @@ class ProductValidator implements ProductValidatorInterface
 
         $checkoutErrorTransfer = $this->createCheckoutErrorTransfer(static::MESSAGE_ERROR_ABSTRACT_PRODUCT_EXISTS, [
             static::MESSAGE_PARAM_SKU => $sku,
-        ]);
+        ], $groupKey);
 
         return $checkoutResponseTransfer->addError($checkoutErrorTransfer);
     }
@@ -373,15 +383,14 @@ class ProductValidator implements ProductValidatorInterface
     }
 
     /**
-     * @param string $message
      * @param array<string, mixed> $parameters
-     *
-     * @return \Generated\Shared\Transfer\CheckoutErrorTransfer
      */
-    protected function createCheckoutErrorTransfer(string $message, array $parameters = []): CheckoutErrorTransfer
+    protected function createCheckoutErrorTransfer(string $message, array $parameters = [], ?string $groupKey = null): CheckoutErrorTransfer
     {
         return (new CheckoutErrorTransfer())
             ->setMessage($message)
-            ->setParameters($parameters);
+            ->setParameters($parameters)
+            ->setErrorType($this->productCartConnectorConfig->getCheckoutErrorType())
+            ->setGroupKey($groupKey);
     }
 }

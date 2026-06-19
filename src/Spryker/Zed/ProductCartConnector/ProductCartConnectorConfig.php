@@ -11,4 +11,16 @@ use Spryker\Zed\Kernel\AbstractBundleConfig;
 
 class ProductCartConnectorConfig extends AbstractBundleConfig
 {
+    protected const string CHECKOUT_ERROR_TYPE = 'ProductUnavailable';
+
+    /**
+     * Specification:
+     * - Returns the error type identifier used in CheckoutErrorTransfer for errors produced by this module.
+     *
+     * @api
+     */
+    public function getCheckoutErrorType(): string
+    {
+        return static::CHECKOUT_ERROR_TYPE;
+    }
 }
