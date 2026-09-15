@@ -114,13 +114,14 @@ class ProductValidator implements ProductValidatorInterface
         CheckoutResponseTransfer $checkoutResponseTransfer,
         array $skusToSkip = []
     ): bool {
-        if ($quoteTransfer->getItems()->count() === 0) {
+        $itemTransfers = $this->getItemTransfersToValidate($quoteTransfer);
+
+        if ($itemTransfers->count() === 0) {
             $checkoutResponseTransfer->setIsSuccess(true);
 
             return true;
         }
 
-        $itemTransfers = $quoteTransfer->getItems();
         $skus = $this->extractProductSkusFromItemTransfers($itemTransfers);
         $indexedProductConcreteTransfers = $this->getIndexedProductConcretesByProductConcreteSkus($skus[static::SKU_CONCRETE]);
         $indexedProductAbstractTransfers = $this->getIndexedProductAbstractsByProductAbstractSkus($skus[static::SKU_ABSTRACT]);
@@ -310,6 +311,28 @@ class ProductValidator implements ProductValidatorInterface
         $responseTransfer->setIsSuccess($isSuccessful);
 
         return $responseTransfer;
+    }
+
+    /**
+     * @return \ArrayObject<array-key, \Generated\Shared\Transfer\ItemTransfer>
+     */
+    protected function getItemTransfersToValidate(QuoteTransfer $quoteTransfer): ArrayObject
+    {
+        return new ArrayObject([...$quoteTransfer->getItems(), ...$this->getUniqueBundleItemTransfers($quoteTransfer)]);
+    }
+
+    /**
+     * @return list<\Generated\Shared\Transfer\ItemTransfer>
+     */
+    protected function getUniqueBundleItemTransfers(QuoteTransfer $quoteTransfer): array
+    {
+        $uniqueBundleItemTransfers = [];
+
+        foreach ($quoteTransfer->getBundleItems() as $bundleItemTransfer) {
+            $uniqueBundleItemTransfers[$bundleItemTransfer->getGroupKey() ?: $bundleItemTransfer->getSkuOrFail()] = $bundleItemTransfer;
+        }
+
+        return array_values($uniqueBundleItemTransfers);
     }
 
     /**

@@ -24,7 +24,7 @@ class OrderAmendmentProductExistsCheckoutPreConditionPlugin extends AbstractPlug
      * {@inheritDoc}
      * - Requires `QuoteTransfer.originalSalesOrderItems.sku` to be set.
      * - Requires either `QuoteTransfer.item.sku` or `QuoteTransfer.item.abstractSku` to be set.
-     * - Does nothing if quote items are empty.
+     * - Does nothing if both `QuoteTransfer.items` and `QuoteTransfer.bundleItems` are empty.
      * - Validates if concrete products with sku `QuoteTransfer.item.sku` exist and active.
      * - If `QuoteTransfer.item.sku` is missing, validates if abstract products with sku `QuoteTransfer.item.abstractSku` exist.
      * - Adds corresponding errors to `CheckoutResponseTransfer` in case of failed validation.

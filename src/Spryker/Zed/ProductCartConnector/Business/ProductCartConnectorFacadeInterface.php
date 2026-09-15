@@ -69,7 +69,9 @@ interface ProductCartConnectorFacadeInterface
 
     /**
      * Specification:
-     * - Does nothing if quote items are empty.
+     * - Validates the items from `QuoteTransfer.items` and the product bundles from `QuoteTransfer.bundleItems`.
+     * - Deduplicates `QuoteTransfer.bundleItems` by `QuoteTransfer.bundleItem.groupKey`, so a bundle added several times is validated once.
+     * - Does nothing if both `QuoteTransfer.items` and `QuoteTransfer.bundleItems` are empty.
      * - Requires either `QuoteTransfer.item.sku` or `QuoteTransfer.item.abstractSku` to be set.
      * - Validates if concrete products with sku `QuoteTransfer.item.sku` exist and active.
      * - If `QuoteTransfer.item.sku` is missing, validates if abstract products with sku `QuoteTransfer.item.abstractSku` exist.
