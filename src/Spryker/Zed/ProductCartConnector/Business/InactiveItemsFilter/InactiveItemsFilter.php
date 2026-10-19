@@ -106,6 +106,7 @@ class InactiveItemsFilter implements InactiveItemsFilterInterface
         $productConcreteTransfers = $this->productFacade->getProductConcretesByCriteria($productCriteriaTransfer);
         $indexedProductConcreteTransfers = $this->indexProductConcreteTransfersBySku($productConcreteTransfers);
 
+        /** @var \ArrayObject<array-key, \Generated\Shared\Transfer\ItemTransfer> $filteredItemTransfers */
         $filteredItemTransfers = new ArrayObject();
         $messageTransfersIndexedBySku = [];
         foreach ($itemTransfers as $key => $itemTransfer) {
