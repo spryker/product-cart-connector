@@ -8,6 +8,12 @@
 namespace Spryker\Zed\ProductCartConnector\Business;
 
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
+use Spryker\Zed\ProductCartConnector\Business\Expander\ItemAbstractNameExpander;
+use Spryker\Zed\ProductCartConnector\Business\Expander\ItemAbstractNameExpanderInterface;
+use Spryker\Zed\ProductCartConnector\Business\Expander\ItemBrandExpander;
+use Spryker\Zed\ProductCartConnector\Business\Expander\ItemBrandExpanderInterface;
+use Spryker\Zed\ProductCartConnector\Business\Expander\ItemSelectedVariantAttributesExpander;
+use Spryker\Zed\ProductCartConnector\Business\Expander\ItemSelectedVariantAttributesExpanderInterface;
 use Spryker\Zed\ProductCartConnector\Business\Expander\ProductExpander;
 use Spryker\Zed\ProductCartConnector\Business\Expander\ProductUrlExpander;
 use Spryker\Zed\ProductCartConnector\Business\Expander\ProductUrlExpanderInterface;
@@ -15,6 +21,10 @@ use Spryker\Zed\ProductCartConnector\Business\Extractor\QuoteOriginalSalesOrderI
 use Spryker\Zed\ProductCartConnector\Business\Extractor\QuoteOriginalSalesOrderItemExtractorInterface;
 use Spryker\Zed\ProductCartConnector\Business\InactiveItemsFilter\InactiveItemsFilter;
 use Spryker\Zed\ProductCartConnector\Business\InactiveItemsFilter\InactiveItemsFilterInterface;
+use Spryker\Zed\ProductCartConnector\Business\Reader\ProductAbstractReader;
+use Spryker\Zed\ProductCartConnector\Business\Reader\ProductAbstractReaderInterface;
+use Spryker\Zed\ProductCartConnector\Business\Resolver\ItemSelectedVariantAttributesResolver;
+use Spryker\Zed\ProductCartConnector\Business\Resolver\ItemSelectedVariantAttributesResolverInterface;
 use Spryker\Zed\ProductCartConnector\Business\Validator\ProductValidator;
 use Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToMessengerFacadeInterface;
 use Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToStoreFacadeInterface;
@@ -23,6 +33,7 @@ use Spryker\Zed\ProductCartConnector\ProductCartConnectorDependencyProvider;
 /**
  * @method \Spryker\Zed\ProductCartConnector\Business\ProductCartConnectorBusinessFactory getFactory()
  * @method \Spryker\Zed\ProductCartConnector\ProductCartConnectorConfig getConfig()
+ * @method \Spryker\Zed\ProductCartConnector\Persistence\ProductCartConnectorRepositoryInterface getRepository()
  */
 class ProductCartConnectorBusinessFactory extends AbstractBusinessFactory
 {
@@ -34,6 +45,41 @@ class ProductCartConnectorBusinessFactory extends AbstractBusinessFactory
         return new ProductExpander(
             $this->getLocaleFacade(),
             $this->getProductFacade(),
+            $this->createProductAbstractReader(),
+            $this->createItemAbstractNameExpander(),
+            $this->createItemBrandExpander(),
+            $this->createItemSelectedVariantAttributesExpander(),
+        );
+    }
+
+    public function createItemAbstractNameExpander(): ItemAbstractNameExpanderInterface
+    {
+        return new ItemAbstractNameExpander();
+    }
+
+    public function createItemBrandExpander(): ItemBrandExpanderInterface
+    {
+        return new ItemBrandExpander($this->getConfig());
+    }
+
+    public function createItemSelectedVariantAttributesExpander(): ItemSelectedVariantAttributesExpanderInterface
+    {
+        return new ItemSelectedVariantAttributesExpander(
+            $this->getRepository(),
+            $this->createItemSelectedVariantAttributesResolver(),
+        );
+    }
+
+    public function createItemSelectedVariantAttributesResolver(): ItemSelectedVariantAttributesResolverInterface
+    {
+        return new ItemSelectedVariantAttributesResolver();
+    }
+
+    public function createProductAbstractReader(): ProductAbstractReaderInterface
+    {
+        return new ProductAbstractReader(
+            $this->getLocaleFacade(),
+            $this->getRepository(),
         );
     }
 

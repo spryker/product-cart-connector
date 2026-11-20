@@ -20,6 +20,14 @@ class ProductCartPlugin extends AbstractPlugin implements ItemExpanderPluginInte
 {
     /**
      * {@inheritDoc}
+     * - Expands the items with the data of their concrete products.
+     * - Sets `ItemTransfer.abstractName` to the name of the abstract product in the current locale; null when it has none there.
+     * - Sets `ItemTransfer.brand` to the `brand` attribute in the order of the product storage: concrete localized over concrete
+     *   over abstract localized over abstract, the localized ones in the current locale; null when none has a non-empty scalar one.
+     * - Sets `ItemTransfer.selectedVariantAttributes` to the super attributes among the concrete attributes, the localized values of the
+     *   current locale winning, attribute key to value, ordered by attribute key as strings, e.g. ["color" => "Red", "storage_capacity" => "64 GB"];
+     *   empty and non-scalar values are left out.
+     * - Takes the localized concrete attributes from the concrete products it reads; reads the abstract products with their localized attributes and the super attribute keys with one database query each.
      *
      * @api
      *

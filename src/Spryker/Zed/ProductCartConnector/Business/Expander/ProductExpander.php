@@ -10,6 +10,7 @@ namespace Spryker\Zed\ProductCartConnector\Business\Expander;
 use Generated\Shared\Transfer\CartChangeTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\ProductConcreteTransfer;
+use Spryker\Zed\ProductCartConnector\Business\Reader\ProductAbstractReaderInterface;
 use Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToLocaleInterface;
 use Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToProductInterface;
 
@@ -27,7 +28,11 @@ class ProductExpander implements ProductExpanderInterface
 
     public function __construct(
         ProductCartConnectorToLocaleInterface $localeFacade,
-        ProductCartConnectorToProductInterface $productFacade
+        ProductCartConnectorToProductInterface $productFacade,
+        protected ProductAbstractReaderInterface $productAbstractReader,
+        protected ItemAbstractNameExpanderInterface $itemAbstractNameExpander,
+        protected ItemBrandExpanderInterface $itemBrandExpander,
+        protected ItemSelectedVariantAttributesExpanderInterface $itemSelectedVariantAttributesExpander
     ) {
         $this->localeFacade = $localeFacade;
         $this->productFacade = $productFacade;
@@ -53,7 +58,58 @@ class ProductExpander implements ProductExpanderInterface
             $this->expandItemWithProductConcrete($productConcreteTransfer, $itemTransfer);
         }
 
-        return $cartChangeTransfer;
+        return $this->expandItemsWithProductDetails(
+            $cartChangeTransfer,
+            $this->getCurrentLocaleAttributesIndexedByIdProductConcrete($productConcreteTransfers),
+        );
+    }
+
+    /**
+     * Runs after the concrete product data is set: it needs the abstract product ID, the concrete product ID and the concrete attributes of the items.
+     *
+     * @param \Generated\Shared\Transfer\CartChangeTransfer $cartChangeTransfer
+     * @param array<int, array<string, mixed>> $productConcreteLocalizedAttributes
+     *
+     * @return \Generated\Shared\Transfer\CartChangeTransfer
+     */
+    protected function expandItemsWithProductDetails(
+        CartChangeTransfer $cartChangeTransfer,
+        array $productConcreteLocalizedAttributes
+    ): CartChangeTransfer {
+        $productAbstractTransfers = $this->productAbstractReader->getProductAbstractsWithCurrentLocaleAttributesIndexedByIdProductAbstract($cartChangeTransfer);
+
+        $this->itemAbstractNameExpander->expandItems($cartChangeTransfer, $productAbstractTransfers);
+        $this->itemBrandExpander->expandItems($cartChangeTransfer, $productAbstractTransfers, $productConcreteLocalizedAttributes);
+
+        return $this->itemSelectedVariantAttributesExpander->expandItems($cartChangeTransfer, $productConcreteLocalizedAttributes);
+    }
+
+    /**
+     * The concrete products are read with their localized attributes in every locale, so the current locale's are taken from them
+     * instead of being read again. A product without localized attributes in the current locale is left out.
+     *
+     * @param array<string, \Generated\Shared\Transfer\ProductConcreteTransfer> $productConcreteTransfers
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    protected function getCurrentLocaleAttributesIndexedByIdProductConcrete(array $productConcreteTransfers): array
+    {
+        $idCurrentLocale = $this->localeFacade->getCurrentLocale()->getIdLocale();
+        $currentLocaleAttributes = [];
+
+        foreach ($productConcreteTransfers as $productConcreteTransfer) {
+            foreach ($productConcreteTransfer->getLocalizedAttributes() as $localizedAttributesTransfer) {
+                $isCurrentLocale = $localizedAttributesTransfer->getLocale()?->getIdLocale() === $idCurrentLocale;
+
+                if (!$isCurrentLocale) {
+                    continue;
+                }
+
+                $currentLocaleAttributes[$productConcreteTransfer->getIdProductConcreteOrFail()] = $localizedAttributesTransfer->getAttributes();
+            }
+        }
+
+        return $currentLocaleAttributes;
     }
 
     /**

@@ -12,7 +12,11 @@ use Generated\Shared\Transfer\CartChangeTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\LocaleTransfer;
 use Generated\Shared\Transfer\ProductConcreteTransfer;
+use Spryker\Zed\ProductCartConnector\Business\Expander\ItemAbstractNameExpanderInterface;
+use Spryker\Zed\ProductCartConnector\Business\Expander\ItemBrandExpanderInterface;
+use Spryker\Zed\ProductCartConnector\Business\Expander\ItemSelectedVariantAttributesExpanderInterface;
 use Spryker\Zed\ProductCartConnector\Business\Expander\ProductExpander;
+use Spryker\Zed\ProductCartConnector\Business\Reader\ProductAbstractReaderInterface;
 use Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToLocaleInterface;
 use Spryker\Zed\ProductCartConnector\Dependency\Facade\ProductCartConnectorToProductInterface;
 
@@ -127,11 +131,25 @@ class ProductManagerTest extends Unit
             ->willReturn($localizedName);
 
         $mockLocaleFacade = $this->getMockLocaleFacade();
-        $mockLocaleFacade->expects($this->once())
-            ->method('getCurrentLocale')
+        $mockLocaleFacade->method('getCurrentLocale')
             ->willReturn(new LocaleTransfer());
 
-        return new ProductExpander($mockLocaleFacade, $mockProductFacade);
+        return new ProductExpander(
+            $mockLocaleFacade,
+            $mockProductFacade,
+            $this->createMock(ProductAbstractReaderInterface::class),
+            $this->createMock(ItemAbstractNameExpanderInterface::class),
+            $this->createMock(ItemBrandExpanderInterface::class),
+            $this->createItemSelectedVariantAttributesExpanderStub(),
+        );
+    }
+
+    private function createItemSelectedVariantAttributesExpanderStub(): ItemSelectedVariantAttributesExpanderInterface
+    {
+        $itemSelectedVariantAttributesExpanderStub = $this->createMock(ItemSelectedVariantAttributesExpanderInterface::class);
+        $itemSelectedVariantAttributesExpanderStub->method('expandItems')->willReturnArgument(0);
+
+        return $itemSelectedVariantAttributesExpanderStub;
     }
 
     /**
